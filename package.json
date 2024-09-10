@@ -1,0 +1,23 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "axios": "^1.6.4",
+        "laravel-vite-plugin": "^1.0",
+        "sass": "^1.77.6",
+        "vite": "^5.0"
+    },
+    "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^42.0.2",
+        "bootstrap": "^5.3.3",
+        "chart.js": "^4.4.3",
+        "jquery": "^3.7.1",
+        "laravel-datatables-vite": "^0.5.2",
+        "perfect-scrollbar": "^1.5.5",
+        "sortablejs": "^1.15.2"
+    }
+}

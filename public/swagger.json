@@ -1,0 +1,1140 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://api.example.com"
+        },
+        {
+            "url": "https://migright.envast.tn/api/",
+            "description": "Migright Staging Server"
+        },
+        {
+            "url": "http://127.0.0.1:8000/api/",
+            "description": "Hr local Server"
+        }
+    ],
+    "paths": {
+        "/service-configurations": {
+            "get": {
+                "tags": [
+                    "Configurations"
+                ],
+                "summary": "Get all categories and regions",
+                "description": "Returns all categories and regions.",
+                "operationId": "getConfigurations",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Category 1"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "regions": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Region 1"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/demands": {
+            "get": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Get demands by phone number",
+                "description": "Retrieve a list of demands filtered by a given phone number.",
+                "operationId": "7097d18d53c3f4a4ed8da70b390688cc",
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "The phone number to filter demands by.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of demands",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demands": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/DemandResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Phone number is required."
+                    }
+                }
+            }
+        },
+        "/demands/testimonials": {
+            "post": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Submit a testimony",
+                "description": "Submit a testimony demand",
+                "operationId": "8c43803edce0d83bf9810cc0e5c19efd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TestimonyRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The testimony demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/demands/testimonials/{id}": {
+            "put": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Update a testimony",
+                "description": "Update an existing testimony demand",
+                "operationId": "d04a369798dab54ffa31a4281ee68ff5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the testimony demand",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TestimonyRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The updated testimony demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Testimony demand not found"
+                    }
+                }
+            }
+        },
+        "/demands/assistance": {
+            "post": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Submit an assistance demand",
+                "description": "Submit an assistance demand",
+                "operationId": "1079112aa14af29b9349057e97edab8b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssistanceDemandRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The assistance demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/demands/assistance/{id}": {
+            "put": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Update an assistance demand",
+                "description": "Update an existing assistance demand",
+                "operationId": "15a30c4ab4d9d68de7520a3722ef4f78",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the assistance demand",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssistanceDemandRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The updated assistance demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Assistance demand not found"
+                    }
+                }
+            }
+        },
+        "/demands/lost-person": {
+            "post": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Submit a lost person demand",
+                "description": "Submit a lost person demand",
+                "operationId": "bfc3cc3ff6170e0e2afb76ca934f6784",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LostPersonRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The lost person demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/demands/lost-person/{id}": {
+            "put": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Update a lost person demand",
+                "description": "Update an existing assistance demand",
+                "operationId": "9c6655029972a7d08329bb1fb58d4c2e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the lost person demand",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LostPersonRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The updated lost person demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Assistance demand not found"
+                    }
+                }
+            }
+        },
+        "/demands/{id}": {
+            "get": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Get demand by ID",
+                "description": "Retrieve a demand by its ID",
+                "operationId": "d525ce7220c1c6c90c1e885d4827474b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the demand",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The demand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Demand not found"
+                    }
+                }
+            }
+        },
+        "/demands/{id}/cancel": {
+            "get": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Get cancellation reasons",
+                "description": "Retrieve a list of cancellation reasons.",
+                "operationId": "eb5e844614165accab4795bc506ec503",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the demand",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of cancellation reasons",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "reasons": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CancellationReason"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Demand not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Demands"
+                ],
+                "summary": "Cancel a demand",
+                "description": "Cancel a demand and store the cancellation reason.",
+                "operationId": "d2e1c5f5e1e4cfb8ecabff0ff0a84d24",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the demand",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "reason_id": {
+                                        "description": "ID of the cancellation reason",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Demand cancelled successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "demand": {
+                                            "$ref": "#/components/schemas/DemandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Demand not found"
+                    }
+                }
+            }
+        },
+        "/news/popular": {
+            "get": {
+                "tags": [
+                    "News"
+                ],
+                "summary": "Get popular news",
+                "operationId": "1acba0186c689b9da84a5c4189cdbc7b",
+                "parameters": [
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "The locale for the news items",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "en"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of popular news",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "news": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/NewsResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news": {
+            "get": {
+                "tags": [
+                    "News"
+                ],
+                "summary": "Get paginated list of news",
+                "operationId": "b83ff020eb45141b07c365e50a4b27bd",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    },
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "The locale for the news items",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "en"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A paginated list of news",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "perPage": {
+                                            "type": "integer"
+                                        },
+                                        "nextCursor": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previousCursor": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "news": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/NewsResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/news/{id}": {
+            "get": {
+                "tags": [
+                    "News"
+                ],
+                "summary": "Get news by ID",
+                "description": "Retrieve a news item by its ID",
+                "operationId": "52293d29070c8525e0db8f2301add0b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the news item",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Accept-Language",
+                        "in": "header",
+                        "description": "The locale for the news item",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "en"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The news item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "news": {
+                                            "$ref": "#/components/schemas/NewsResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "News item not found"
+                    }
+                }
+            }
+        },
+        "/services": {
+            "get": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Get services by category and region",
+                "description": "Retrieve services filtered by category and/or region. If no filters are provided, all services are returned.",
+                "operationId": "getServices",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "ID of the category",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "region_id",
+                        "in": "query",
+                        "description": "ID of the region",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of services",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "services": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ServiceResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "properties": {
+                                                    "": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/services/{id}": {
+            "get": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Get service by ID",
+                "description": "Retrieve a service by its ID",
+                "operationId": "getServiceById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of service",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "service": {
+                                            "$ref": "#/components/schemas/ServiceResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Service not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Service] {id}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AssistanceDemandRequest": {
+                "required": [
+                    "firstName",
+                    "lastName",
+                    "phone",
+                    "assistanceType"
+                ],
+                "properties": {
+                    "firstName": {
+                        "description": "The first name of the person requesting assistance",
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "description": "The last name of the person requesting assistance",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email address of the person requesting assistance",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "description": "The phone number of the person requesting assistance",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the assistance request",
+                        "type": "string"
+                    },
+                    "voiceMessage": {
+                        "description": "The voice message related to the assistance request",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "file": {
+                        "description": "The file attached to the assistance request",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "assistanceType": {
+                        "description": "The type of assistance requested",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LostPersonRequest": {
+                "required": [
+                    "region"
+                ],
+                "properties": {
+                    "firstName": {
+                        "description": "The first name of the lost person",
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "description": "The last name of the lost person",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email address of the person reporting the lost person",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "description": "The phone number of the person reporting the lost person",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the lost person",
+                        "type": "string"
+                    },
+                    "voiceMessage": {
+                        "description": "The voice message related to the lost person",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "file": {
+                        "description": "The file attached to the lost person report",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "region": {
+                        "description": "The region where the person was lost",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "The date when the person was lost",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "nationality": {
+                        "description": "The gender of the lost person",
+                        "type": "string"
+                    },
+                    "age": {
+                        "description": "The age of the lost person",
+                        "type": "string"
+                    },
+                    "notificationSender": {
+                        "description": "The person who submitted the request",
+                        "type": "string"
+                    },
+                    "gender": {
+                        "description": "The gender of lost person",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TestimonyRequest": {
+                "properties": {
+                    "testimonyType": {
+                        "description": "The type of the testimony",
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "description": "The first name of the person giving the testimony",
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "description": "The last name of the person giving the testimony",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email address of the person giving the testimony",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "description": "The phone number of the person giving the testimony",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the testimony",
+                        "type": "string"
+                    },
+                    "voiceMessage": {
+                        "description": "The voice message of the testimony",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "file": {
+                        "description": "The file attached to the testimony",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Category Name"
+                    }
+                },
+                "type": "object"
+            },
+            "DemandResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "details": {
+                        "type": "object",
+                        "additionalProperties": true
+                    },
+                    "type": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "NewsResource": {
+                "properties": {
+                    "id": {
+                        "description": "ID of the news item",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "description": "Title of the news item",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the news item",
+                        "type": "string"
+                    },
+                    "image": {
+                        "description": "Image URL of the news item",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "RegionResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Region Name"
+                    }
+                },
+                "type": "object"
+            },
+            "ServiceResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Service Name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Service Description"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "Service Address"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/CategoryResource"
+                    },
+                    "region": {
+                        "$ref": "#/components/schemas/RegionResource"
+                    },
+                    "contact": {
+                        "type": "string",
+                        "example": "Contact Information"
+                    },
+                    "location_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://example.com/location"
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://example.com/storage/uploads/images/service.jpg"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Configurations",
+            "description": "Configurations"
+        },
+        {
+            "name": "Demands",
+            "description": "Demands"
+        },
+        {
+            "name": "News",
+            "description": "News"
+        },
+        {
+            "name": "Services",
+            "description": "Services"
+        }
+    ]
+}

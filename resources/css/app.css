@@ -1,0 +1,15 @@
+@import 'nucleo-icons.css';
+@import 'nucleo-svg.css';
+@import 'soft-ui-dashboard.css';
+.privacy-content {
+    line-height: 1.6;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+}
+
+.card-footer {
+    background-color: #f1f1f1;
+}
+
