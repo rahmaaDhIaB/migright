@@ -292,19 +292,8 @@ class LostPersonDemandController extends Controller
     /**
      * Display the specified resource.
      */
-//    public function show(string $id)
-//    {
-//        $lostPersonDemand = LostPersonDemand::with('demand')->findOrFail($id);
-//        return view('lostPerson.show', compact('lostPersonDemand'));
-//    }
-
-
-
     public function show(Request $request,string $id)
     {
-
-
-
         $status = $request->query('status');
 
         if ($status === 'pending') {
@@ -338,6 +327,7 @@ class LostPersonDemandController extends Controller
             'file' => 'nullable|file|mimes:png,jpeg,pdf,pptx,xls,doc,csv,jpg|max:2048',
         ]);
         $partnerDecision = PartnerDecision::findOrFail($id);
+        $this->authorizeDecisionAccess($partnerDecision);
         $partnerDecision->status = 'accepted';
         $partnerDecision->comment = $request->input('comment');
 
@@ -423,6 +413,7 @@ class LostPersonDemandController extends Controller
             'file' => 'nullable|file|mimes:png,jpeg,pdf,pptx,xls,doc,csv,jpg|max:2048',
         ]);
         $partnerDecision = PartnerDecision::findOrFail($id);
+        $this->authorizeDecisionAccess($partnerDecision);
         $partnerDecision->status = 'refused';
         if ($request->filled('comment')) {
             $partnerDecision->comment = $request->input('comment');

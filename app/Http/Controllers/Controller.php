@@ -15,5 +15,15 @@ namespace App\Http\Controllers;
  */
 abstract class Controller
 {
-    //
+    /**
+     * Partners may only act on decisions assigned to them; admins may act on any.
+     */
+    protected function authorizeDecisionAccess(\App\Models\PartnerDecision $partnerDecision): void
+    {
+        $user = auth('web')->user();
+
+        if (!$user->is_admin && $partnerDecision->user_id !== $user->id) {
+            abort(403);
+        }
+    }
 }

@@ -3,22 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\AssistanceDemandDataTable;
-use App\Mail\AssignDemandToUser;
 use App\Models\AssistanceDemand;
 use App\Models\Demand;
 use App\Models\ExpoPushToken;
 use App\Models\LostPersonDemand;
-use App\Models\News;
 use App\Models\PartnerDecision;
 use App\Models\Region;
 use App\Models\TestimonyDemand;
 use App\Models\Type;
 use App\Models\User;
+use App\Services\DemandAssignmentService;
 use ExpoSDK\Expo;
 use ExpoSDK\ExpoMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class AssistanceDemandController extends Controller
 {
@@ -57,8 +55,6 @@ class AssistanceDemandController extends Controller
             'requestSubmitter.*' => 'required|in:concernedPerson,otherPerson'
         ]);
 
-        $filePath = public_path('uploads');
-
         $assistanceDemand = new AssistanceDemand();
         $assistanceDemand->requestSubmitter = $request->requestSubmitter ? $request->requestSubmitter[0] : 'anonymous'; // Assuming single type is selected
         $assistanceDemand->region = $request->region;
@@ -90,14 +86,6 @@ class AssistanceDemandController extends Controller
      */
     public function show(Request $request, string $id)
     {
-//        if (auth('web')->user()->is_admin) {
-//            $assistanceDemand = AssistanceDemand::with('demand')->findOrFail($id);
-//            $demand = $assistanceDemand->demand()->first();
-//            $type = $demand->types()->first();
-//            return view('assistance.show', compact('assistanceDemand', 'type'));
-//        } else {
-
-
         $status = $request->query('status');
 
         if ($status === 'pending') {
@@ -228,33 +216,17 @@ class AssistanceDemandController extends Controller
         return view('assistance.create-partner', compact('id', 'partners', 'assistanceDemand'));
     }
 
-    public function assignAssistanceDemandStore(Request $request, $id)
+    public function assignAssistanceDemandStore(Request $request, $id, DemandAssignmentService $assignmentService)
     {
         $request->validate([
             'partner' => 'required|exists:users,id',
         ]);
 
-        $user = User::findOrFail($request->partner);
-        $assistanceDemand = AssistanceDemand::findOrFail($id);
-        $demand = $assistanceDemand->demand;
+        $assignmentService->assignToPartner(
+            AssistanceDemand::findOrFail($id),
+            User::findOrFail($request->partner)
+        );
 
-        $demand->user_id = $user->id;
-        $demand->save();
-
-        $mailable = new AssignDemandToUser($user, $demand);
-        Mail::to($user->email)->send($mailable);
-
-        PartnerDecision::create([
-            'demand_id' => $demand->id,
-            'user_id' => $user->id,
-            'status' => 'awaiting',
-            'comment' => null,
-            'file' => null,
-        ]);
-
-        $demand->status = 'in progress';
-        $demand->save();
-//        dd($demand->status);
         return redirect()->route('assistance.index')->with('success', 'Assistance demand assigned, email sent, and decision recorded successfully.');
     }
 
@@ -266,33 +238,17 @@ class AssistanceDemandController extends Controller
 
     }
 
-    public function assignLostPersonDemandStore(Request $request, $id)
+    public function assignLostPersonDemandStore(Request $request, $id, DemandAssignmentService $assignmentService)
     {
         $request->validate([
             'partner' => 'required|exists:users,id',
         ]);
 
-        $user = User::findOrFail($request->partner);
-        $lostPersonDemand = LostPersonDemand::findOrFail($id);
-        $demand = $lostPersonDemand->demand;
+        $assignmentService->assignToPartner(
+            LostPersonDemand::findOrFail($id),
+            User::findOrFail($request->partner)
+        );
 
-        $demand->user_id = $user->id;
-        $demand->save();
-
-        $mailable = new AssignDemandToUser($user, $demand);
-        Mail::to($user->email)->send($mailable);
-
-        PartnerDecision::create([
-            'demand_id' => $demand->id,
-            'user_id' => $user->id,
-            'status' => 'awaiting',
-            'comment' => null,
-            'file' => null,
-        ]);
-
-        $demand->status = 'in progress';
-        $demand->save();
-//        dd($demand->status);
         return redirect()->route('lostPerson.index')->with('success', 'lost Person demand assigned, email sent, and decision recorded successfully.');
     }
 
@@ -304,42 +260,18 @@ class AssistanceDemandController extends Controller
 
     }
 
-    public function assignTestimonyDemandStore(Request $request, $id)
+    public function assignTestimonyDemandStore(Request $request, $id, DemandAssignmentService $assignmentService)
     {
-
         $request->validate([
             'partner' => 'required|exists:users,id',
         ]);
 
-        $user = User::findOrFail($request->partner);
-        $testimonyDemand = TestimonyDemand::findOrFail($id);
-        $demand = $testimonyDemand->demand;
+        $assignmentService->assignToPartner(
+            TestimonyDemand::findOrFail($id),
+            User::findOrFail($request->partner)
+        );
 
-        $demand->user_id = $user->id;
-        $demand->save();
-
-        $mailable = new AssignDemandToUser($user, $demand);
-        Mail::to($user->email)->send($mailable);
-
-        PartnerDecision::create([
-            'demand_id' => $demand->id,
-            'user_id' => $user->id,
-            'status' => 'awaiting',
-            'comment' => null,
-            'file' => null,
-        ]);
-
-        $demand->status = 'in progress';
-        $demand->save();
-//        dd($demand->status);
         return redirect()->route('testimony.index')->with('success', 'testimony demand assigned, email sent, and decision recorded successfully.');
-
-
-        $testimonyDemand = TestimonyDemand::findOrFail($id);
-        $demand = $testimonyDemand->demand;
-        $demand->user_id = $request->partner;
-        $demand->save();
-        return redirect()->route('testimony.index');
     }
 
 
@@ -362,6 +294,7 @@ class AssistanceDemandController extends Controller
             'file' => 'nullable|file|mimes:png,jpeg,pdf,pptx,xls,doc,csv,jpg|max:2048',
         ]);
         $partnerDecision = PartnerDecision::findOrFail($id);
+        $this->authorizeDecisionAccess($partnerDecision);
         $partnerDecision->status = 'accepted';
         $partnerDecision->comment = $request->input('comment');
 
@@ -394,6 +327,7 @@ class AssistanceDemandController extends Controller
             'file' => 'nullable|file|mimes:png,jpeg,pdf,pptx,xls,doc,csv,jpg|max:2048',
         ]);
         $partnerDecision = PartnerDecision::findOrFail($id);
+        $this->authorizeDecisionAccess($partnerDecision);
         $partnerDecision->status = 'refused';
         if ($request->filled('comment')) {
             $partnerDecision->comment = $request->input('comment');
@@ -503,8 +437,6 @@ class AssistanceDemandController extends Controller
         }
         $demand->demandable_type = $request->demand_type;
         $demand->demandable_id = $newDemandable->id;
-        $demand->save();
-//        $demandable->delete();
         $demand->save();
         return redirect()->route('assistance.index')->with('success', __('Demand type updated successfully.'));
     }

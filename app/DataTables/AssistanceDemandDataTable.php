@@ -24,31 +24,6 @@ class AssistanceDemandDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-//        return (new EloquentDataTable($query))
-//            ->editColumn('status', function ($row) {
-//                $color = 'black';
-//                if ($row->status === 'accepted') {
-//                    $color = 'green';
-//                } elseif ($row->status === 'refused') {
-//                    $color = 'red';
-//                }
-//             elseif ($row->status === 'closed') {
-//                   $color = 'blue';
-//                }
-//                else {
-//                    $color = 'orange';
-//                }
-//                return '<span style="color:' . $color . '">' . ucfirst($row->status) . '</span>';
-//            })
-//            ->editColumn('created_at', function ($row) {
-//                return Carbon::parse($row->created_at)->format('Y-m-d'); // Format the date
-//            })
-//            ->addColumn('action', 'assistance.actions')
-//            ->rawColumns(['status', 'action'])
-//            ->setRowId('id');
-
-
-
         return (new EloquentDataTable($query))
             ->editColumn('status', function ($row) {
                 $badgeClass = 'badge badge-secondary';
@@ -101,6 +76,8 @@ class AssistanceDemandDataTable extends DataTable
         $status = $this->request()->query('status');
 
         if (auth('web')->user()->is_admin == false) {
+            // Partners may only ever see the decisions assigned to them.
+            $query->where('partner_decision.user_id', auth('web')->id());
             if ($status === "refused") {
                 return $query->where('partner_decision.status', 'refused');
             } elseif ($status === "accepted") {

@@ -25,12 +25,6 @@ class LostPersonDemandDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-//        return (new EloquentDataTable($query))
-//            ->addColumn('action', 'lostPerson.actions')
-//            ->setRowId('id');
-
-
-
         return (new EloquentDataTable($query))
             ->editColumn('status', function ($row) {
                 $badgeClass = 'badge-secondary';
@@ -73,53 +67,6 @@ class LostPersonDemandDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-
-
-
-
-//    public function query(LostPersonDemand $model): QueryBuilder
-//    {
-//        if (auth('web')->user()->is_admin == false) {
-//            $query = $model->newQuery()->whereRelation('demand','user_id','=',auth('web')->user()->id)->with('demand');
-//
-//            $status = $this->request()->query('status');
-//
-//            if ($status === "pending") {
-//                return $query->whereHas('demand', function ($query) {
-//                    $query->where('status', 'pending')->where('user_id','=',auth('web')->user()->id);
-//                });
-//            }
-//            elseif($status === "refused") {
-//                return $query->whereHas('demand', function ($query) {
-//                    $query->where('status', 'refused')->where('user_id','=',auth('web')->user()->id);
-//                });
-//            }
-//
-////        return $query->where('status','accepted');
-//            return $query->whereHas('demand', function ($query) {
-//                $query->where('status', 'accepted')->where('user_id','=',auth('web')->user()->id);
-//            });
-//        }
-//        $query = $model->newQuery()->with('demand');
-//        $status = $this->request()->query('status');
-//        if ($status === "pending") {
-//            return $query->whereHas('demand', function ($query) {
-//                $query->where('status', 'pending');
-//            });
-//        }
-//        elseif($status === "refused") {
-//            return $query->whereHas('demand', function ($query) {
-//                $query->where('status', 'refused');
-//            });
-//        }
-//
-//        return $query->whereHas('demand', function ($query) {
-//            $query->where('status', 'done');
-//        });
-//    }
-
-
-
     public function query(LostPersonDemand $model): QueryBuilder
     {
         $query = PartnerDecision::query()
@@ -130,6 +77,8 @@ class LostPersonDemandDataTable extends DataTable
         $status = $this->request()->query('status');
 
         if (auth('web')->user()->is_admin == false) {
+            // Partners may only ever see the decisions assigned to them.
+            $query->where('partner_decision.user_id', auth('web')->id());
             if ($status === "refused") {
                 return $query->where('partner_decision.status', 'refused');
             } elseif ($status === "accepted") {
@@ -172,24 +121,6 @@ class LostPersonDemandDataTable extends DataTable
 
     public function getColumns(): array
     {
-//        return [
-//            Column::make('id')->title(__('ID')),
-//            Column::make('region')->title(__('Region')),
-//            Column::make('missing_person_gender')->title(__('Gender')),
-//            Column::make('missing_person_age')->title(__('Age')),
-////            Column::make('notification_sender')->title(__('Notification Sender')),
-//            Column::make('nationality')->title(__('Nationality')),
-//            Column::make('demand.status')->title(__('Status')),
-//
-//            Column::computed('action')
-//                ->exportable(false)
-//                ->printable(false)
-//                ->width(60)
-//                ->addClass('text-center'),
-//        ];
-
-
-
         $columns = [];
         $status = $this->request()->query('status');
 

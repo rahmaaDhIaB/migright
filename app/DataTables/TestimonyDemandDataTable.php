@@ -24,11 +24,6 @@ class TestimonyDemandDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-//        return (new EloquentDataTable($query))
-//            ->addColumn('action', 'testimony.actions')
-//            ->setRowId('id');
-
-
         return (new EloquentDataTable($query))
             ->editColumn('status', function ($row) {
                 $badgeClass = 'badge-secondary';
@@ -69,56 +64,6 @@ class TestimonyDemandDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-//    public function query(TestimonyDemand $model): QueryBuilder
-//    {
-//        if (auth('web')->user()->is_admin == false) {
-//            $query = $model->newQuery()->whereRelation('demand','user_id','=',auth('web')->user()->id)->with('demand');
-//
-//            $status = $this->request()->query('status');
-//
-//            if ($status === "pending") {
-//                return $query->whereHas('demand', function ($query) {
-//                    $query->where('status', 'pending')->where('user_id','=',auth('web')->user()->id);
-//                });
-//            }
-//            elseif($status === "done") {
-//                return $query->whereHas('demand', function ($query) {
-//                    $query->where('status', 'done')->where('user_id','=',auth('web')->user()->id);
-//                });
-//            }
-//
-////        return $query->where('status','accepted');
-//            return $query->whereHas('demand', function ($query) {
-//                $query->where('status', 'accepted')->where('user_id','=',auth('web')->user()->id);
-//            });
-//        }
-//        $query = $model->newQuery()->with('demand');
-//
-//        $status = $this->request()->query('status');
-//
-//        if ($status === "pending") {
-//            return $query->whereHas('demand', function ($query) {
-//                $query->where('status', 'pending');
-//            });
-//        }
-//        elseif($status === "refused") {
-//            return $query->whereHas('demand', function ($query) {
-//                $query->where('status', 'refused');
-//            });
-//        }
-//
-////        return $query->where('status','accepted');
-//        return $query->whereHas('demand', function ($query) {
-//            $query->where('status', 'done');
-//        });
-//    }
-
-
-
-
-
-
-
     public function query(TestimonyDemand $model): QueryBuilder
     {
         $query = PartnerDecision::query()
@@ -129,6 +74,8 @@ class TestimonyDemandDataTable extends DataTable
         $status = $this->request()->query('status');
 
         if (auth('web')->user()->is_admin == false) {
+            // Partners may only ever see the decisions assigned to them.
+            $query->where('partner_decision.user_id', auth('web')->id());
             if ($status === "refused") {
                 return $query->where('partner_decision.status', 'refused');
             } elseif ($status === "accepted") {
@@ -176,23 +123,6 @@ class TestimonyDemandDataTable extends DataTable
      */
     public function getColumns(): array
     {
-//        return [
-//            Column::make('id')->title(__('ID')),
-//            Column::make('demand.first_name')->title(__('First Name')),
-//            Column::make('demand.last_name')->title(__('Last Name')),
-//            Column::make('demand.email')->title(__('Email')),
-////            Column::make('demand.file')->title(__('File')),
-//            Column::make('demand.status')->title(__('Status')),
-//            Column::computed('action')
-//                ->exportable(false)
-//                ->printable(false)
-//                ->width(60)
-//                ->addClass('text-center'),
-//        ];
-
-
-
-
         $columns = [];
         $status = $this->request()->query('status');
 

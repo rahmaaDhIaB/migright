@@ -92,19 +92,11 @@ class TestimonyDemandController extends Controller
 
     public function show(Request $request,string $id)
     {
-//        if (auth('web')->user()->is_admin) {
-//            $testimonyDemand = AssistanceDemand::with('demand')->findOrFail($id);
-//            $demand = $testimonyDemand->demand()->first();
-//            $type = $demand->types()->first();
-//            return view('assistance.show', compact('testimonyDemand', 'type'));
-//        } else {
-
         $status = $request->query('status');
 
         if ($status === 'pending') {
             $testimonyDemand = TestimonyDemand::with('demand')->findOrFail($id);
             $demand = $testimonyDemand->demand()->first();
-//            dd($demand->first_name);
             $type = $demand->types()->first();
             return view('testimony.show', compact('testimonyDemand','demand' ,'type'));
 
@@ -131,6 +123,7 @@ class TestimonyDemandController extends Controller
             'file' => 'nullable|file|mimes:png,jpeg,pdf,pptx,xls,doc,csv,jpg|max:2048',
         ]);
         $partnerDecision = PartnerDecision::findOrFail($id);
+        $this->authorizeDecisionAccess($partnerDecision);
         $partnerDecision->status = 'accepted';
         $partnerDecision->comment = $request->input('comment');
 
@@ -163,6 +156,7 @@ class TestimonyDemandController extends Controller
             'file' => 'nullable|file|mimes:png,jpeg,pdf,pptx,xls,doc,csv,jpg|max:2048',
         ]);
         $partnerDecision = PartnerDecision::findOrFail($id);
+        $this->authorizeDecisionAccess($partnerDecision);
         $partnerDecision->status = 'refused';
         if ($request->filled('comment')) {
             $partnerDecision->comment = $request->input('comment');
@@ -246,8 +240,7 @@ class TestimonyDemandController extends Controller
      */
     public function edit(string $id)
     {
-//        $testimony = Demand::findOrFail($id);
-        $testimony = testimonyDemand::with('demand')->findOrFail($id);
+        $testimony = TestimonyDemand::with('demand')->findOrFail($id);
         $types = Type::where('category','testimony')->get();
         return view('testimony.edit', compact('testimony','types'));
     }

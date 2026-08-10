@@ -32,19 +32,3 @@
     </div>
 @endsection
 
-{{--@push('js')--}}
-{{--    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>--}}
-{{--    <script>--}}
-{{--        var descriptionFrDisplay = new Quill('#descriptionFrDisplay', { readOnly: true, theme: 'bubble' });--}}
-{{--        var descriptionEnDisplay = new Quill('#descriptionEnDisplay', { readOnly: true, theme: 'bubble' });--}}
-{{--        var descriptionArDisplay = new Quill('#descriptionArDisplay', { readOnly: true, theme: 'bubble' });--}}
-
-{{--        var descriptionFrDelta = {!! $privacyPolicy->description_fr !!};--}}
-{{--        var descriptionEnDelta = {!! $privacyPolicy->description_en !!};--}}
-{{--        var descriptionArDelta = {!! $privacyPolicy->description_ar !!};--}}
-
-{{--        descriptionFrDisplay.setContents(descriptionFrDelta);--}}
-{{--        descriptionEnDisplay.setContents(descriptionEnDelta);--}}
-{{--        descriptionArDisplay.setContents(descriptionArDelta);--}}
-{{--    </script>--}}
-{{--@endpush--}}
