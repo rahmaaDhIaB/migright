@@ -74,6 +74,6 @@ Feature tests cover the back-office authorization rules: admin-only routes, part
 Honest notes on debt that is still here:
 
 - Demand workflow logic is still duplicated across the three demand controllers (assignment has been extracted to `App\Services\DemandAssignmentService`; treatment/closure has not yet).
-- Uploaded files keep their client-supplied names (prefixed with a timestamp), and old-file cleanup looks in a legacy directory, so replaced files are not actually deleted.
+- Uploaded files keep their client-supplied names (prefixed with a timestamp) rather than randomized ones.
 - Rich-text fields (news, privacy policy) are rendered unescaped and rely on trusted admin input; no HTML sanitization is applied.
 - The API exposes demands by sequential id and phone number without authentication — acceptable only behind the current mobile-app usage pattern, and the top candidate for the next hardening pass.

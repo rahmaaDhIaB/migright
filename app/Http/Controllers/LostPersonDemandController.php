@@ -333,7 +333,7 @@ class LostPersonDemandController extends Controller
 
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
 
             if ($partnerDecision->file) {
                 $existingFile = $filePath . '/' . $partnerDecision->file;
@@ -369,7 +369,7 @@ class LostPersonDemandController extends Controller
         }
 
         if ($request->hasFile('partner_decision_file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
             if ($demand->partner_decision_file) {
                 $existingFile = $filePath . '/' . $demand->partner_decision_file;
                 if (file_exists($existingFile)) {
@@ -420,7 +420,7 @@ class LostPersonDemandController extends Controller
         }
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
             if ($partnerDecision->file) {
                 $existingFile = $filePath . '/' . $partnerDecision->file;
                 if (file_exists($existingFile)) {
@@ -671,7 +671,7 @@ class LostPersonDemandController extends Controller
         $lostPersonDemand->demand->last_name = $request->last_name;
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
 
             if ($lostPersonDemand->demand->file) {
                 $existingFile = $filePath . '/' . $lostPersonDemand->demand->file;

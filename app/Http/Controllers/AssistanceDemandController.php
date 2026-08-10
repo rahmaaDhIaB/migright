@@ -147,7 +147,7 @@ class AssistanceDemandController extends Controller
 
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
 
             if ($assistanceDemand->demand->file) {
                 $existingFile = $filePath . '/' . $assistanceDemand->demand->file;
@@ -198,14 +198,13 @@ class AssistanceDemandController extends Controller
 
     public function refused($id)
     {
+        $demand = Demand::findOrFail($id);
 
-        $assistanceDemand = Demand::findOrFail($id);
+        $demand->status = 'refused';
 
-        $assistanceDemand->status = 'done';
+        $demand->save();
 
-        $assistanceDemand->save();
-
-        return redirect()->route('assistance.index')->with('success', 'assistance done.');
+        return redirect()->route('assistance.index')->with('success', 'assistance refused.');
     }
 
 
@@ -300,7 +299,7 @@ class AssistanceDemandController extends Controller
 
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
 
             if ($partnerDecision->file) {
                 $existingFile = $filePath . '/' . $partnerDecision->file;
@@ -334,7 +333,7 @@ class AssistanceDemandController extends Controller
         }
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
             if ($partnerDecision->file) {
                 $existingFile = $filePath . '/' . $partnerDecision->file;
                 if (file_exists($existingFile)) {
@@ -368,7 +367,7 @@ class AssistanceDemandController extends Controller
         }
 
         if ($request->hasFile('partner_decision_file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
             if ($demand->partner_decision_file) {
                 $existingFile = $filePath . '/' . $demand->partner_decision_file;
                 if (file_exists($existingFile)) {

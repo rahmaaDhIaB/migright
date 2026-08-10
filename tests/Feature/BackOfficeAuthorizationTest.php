@@ -105,6 +105,36 @@ class BackOfficeAuthorizationTest extends TestCase
         $this->assertSame('handled', $decision->fresh()->comment);
     }
 
+    public function test_admin_can_refuse_a_demand_and_the_status_is_stored_as_refused(): void
+    {
+        $decision = $this->decisionAssignedTo($this->partner());
+        $demand = $decision->demand;
+
+        $this->actingAs($this->admin())
+            ->patch("/assistance/{$demand->id}/refused")
+            ->assertRedirect(route('assistance.index'));
+
+        $this->assertSame('refused', $demand->fresh()->status);
+    }
+
+    public function test_admin_can_update_a_user_without_resetting_the_password(): void
+    {
+        $admin = $this->admin();
+        $user = $this->partner();
+        $originalPasswordHash = $user->password;
+
+        $this->actingAs($admin)
+            ->post("/admins/{$user->id}/edit", [
+                'name' => 'New Name',
+                'email' => $user->email,
+            ])
+            ->assertRedirect(route('admins.index'));
+
+        $user->refresh();
+        $this->assertSame('New Name', $user->name);
+        $this->assertSame($originalPasswordHash, $user->password);
+    }
+
     public function test_admin_can_decide_any_case(): void
     {
         $decision = $this->decisionAssignedTo($this->partner());

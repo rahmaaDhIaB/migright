@@ -19,7 +19,7 @@ class Demand extends Model
         'status' => 'pending',
     ];
 
-    protected $enumStatuses = ['pending', 'in progress', 'done','cancelled'];
+    protected $enumStatuses = ['pending', 'in progress', 'done', 'refused', 'cancelled'];
 
     public function demandable()
     {

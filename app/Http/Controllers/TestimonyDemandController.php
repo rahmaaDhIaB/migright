@@ -53,8 +53,6 @@ class TestimonyDemandController extends Controller
             'type.*' => 'in:anonymous,identified'
         ]);
 
-        $filePath = public_path('uploads');
-
         $testimonyDemand = new TestimonyDemand();
         $testimonyDemand->type = $request->type ? $request->type[0] : 'anonymous'; // Assuming single type is selected
 
@@ -129,7 +127,7 @@ class TestimonyDemandController extends Controller
 
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
 
             if ($partnerDecision->file) {
                 $existingFile = $filePath . '/' . $partnerDecision->file;
@@ -163,7 +161,7 @@ class TestimonyDemandController extends Controller
         }
 
         if ($request->hasFile('file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
             if ($partnerDecision->file) {
                 $existingFile = $filePath . '/' . $partnerDecision->file;
                 if (file_exists($existingFile)) {
@@ -197,7 +195,7 @@ class TestimonyDemandController extends Controller
         }
 
         if ($request->hasFile('partner_decision_file')) {
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
             if ($demand->partner_decision_file) {
                 $existingFile = $filePath . '/' . $demand->partner_decision_file;
                 if (file_exists($existingFile)) {
@@ -277,7 +275,7 @@ class TestimonyDemandController extends Controller
         // Process the file upload if 'file' is present in the request
         if ($request->hasFile('file')) {
             // Path to store the files
-            $filePath = public_path('uploads');
+            $filePath = storage_path('app/public/uploads/demands');
 
             if ($testimonyDemand->demand->file) {
                 $existingFile = $filePath . '/' . $testimonyDemand->demand->file;

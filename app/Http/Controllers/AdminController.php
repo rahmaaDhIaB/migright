@@ -62,24 +62,27 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => ['required', 'email'],
-            'password' => 'required',
+            'email' => ['required', 'email', 'unique:users,email,' . $id],
+            'password' => 'nullable',
         ], [
             'name.required' => __('name_is_required'),
             'email.required' => __('enter_your_email_please'),
             'email.email' => __('verify_email_format'),
-            'password.required' => __('enter_password_please'),
+            'email.unique' => __('enter_unique_email_please'),
         ]);
 
         $user = User::findOrFail($id);
-        $user->update([
+
+        $data = [
             'email' => $request->email,
             'name' => $request->name,
-            'password' => bcrypt($request->password)
-        ]);
+        ];
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+        $user->update($data);
 
         return redirect()->route('admins.index')->with('success', __('updated_successfully'));
-
     }
 
     public function destroy($id)

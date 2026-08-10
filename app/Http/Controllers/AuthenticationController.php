@@ -36,14 +36,4 @@ class AuthenticationController extends Controller
         auth()->guard('web')->logout();
         return redirect()->route('login');
     }
-
-    public function register()
-    {
-        return view('authentication.admin.register');
-    }
-
-    public function performRegister(Request $request)
-    {
-
-    }
 }
